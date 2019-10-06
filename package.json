@@ -1,0 +1,23 @@
+{
+  "name": "webpack-suffix-resolver",
+  "version": "1.0.0",
+  "description": "webpack suffix resolver",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vahidd/webpack-suffix-resolver.git"
+  },
+  "keywords": [
+    "webpack",
+    "js"
+  ],
+  "author": "vahidd.com@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vahidd/webpack-suffix-resolver/issues"
+  },
+  "homepage": "https://github.com/vahidd/webpack-suffix-resolver#readme"
+}
