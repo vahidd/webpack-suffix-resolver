@@ -9,16 +9,15 @@ function SuffixResolver(suffix, extensions = ['.js']) {
   this.extensions = extensions;
 }
 
-SuffixResolver.prototype.apply = function(resolver) {
+SuffixResolver.prototype.apply = function (resolver) {
   const { extensions, suffix } = this;
   resolver
     .getHook('resolve')
-    .tapAsync('SuffixResolver', function(request, resolveContext, callback) {
+    .tapAsync('SuffixResolver', function (request, resolveContext, callback) {
       const { context } = request;
       if (
         context.issuer &&
-        !context.issuer.includes('node_modules') &&
-        request.request.includes('some-module')
+        !context.issuer.includes('node_modules')
       ) {
         const absPath = path.resolve(request.path, request.request);
         const { ext, name } = path.parse(absPath);
