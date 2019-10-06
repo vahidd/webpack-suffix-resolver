@@ -4,7 +4,7 @@
 ```bash
 $ npm install webpack-suffix-resolver --save-dev
 OR 
-yarn add webpack-suffix-resolver --dev
+$ yarn add webpack-suffix-resolver --dev
 ```
 
 #### Usage sample
