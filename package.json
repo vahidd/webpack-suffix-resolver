@@ -1,6 +1,6 @@
 {
   "name": "webpack-suffix-resolver",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "webpack suffix resolver",
   "main": "index.js",
   "scripts": {
