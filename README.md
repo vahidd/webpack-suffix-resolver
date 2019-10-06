@@ -1,4 +1,12 @@
 # Webpack suffix resolver
+
+### Setup
+```bash
+$ npm install webpack-suffix-resolver --save-dev
+OR 
+yarn add webpack-suffix-resolver --dev
+```
+
 #### Usage sample
 ```javascript
 const SuffixResolver = require('webpack-suffix-resolver');
