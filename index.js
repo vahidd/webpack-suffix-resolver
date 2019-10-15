@@ -9,6 +9,18 @@ function SuffixResolver(suffix, extensions = ['.js']) {
   this.extensions = extensions;
 }
 
+const getResolveExtension = (file, suffix, extensions) => {
+  const { name, dir } = path.parse(file);
+  for (let index = 0; extensions.length > index; index += 1) {
+    const currentExtension = extensions[index];
+    const filePath = `${dir}/${name}${suffix}${currentExtension}`;
+    if (fs.existsSync(filePath)) {
+      return currentExtension;
+    }
+  }
+  return false;
+};
+
 SuffixResolver.prototype.apply = function (resolver) {
   const { extensions, suffix } = this;
   resolver
@@ -17,41 +29,39 @@ SuffixResolver.prototype.apply = function (resolver) {
       const { context } = request;
       if (
         context.issuer &&
-        !context.issuer.includes('node_modules')
+        !context.issuer.includes('node_modules') &&
+        !request.request.includes('node_modules') &&
+        !request.path.includes('node_modules')
       ) {
-        const absPath = path.resolve(request.path, request.request);
-        const { ext, name } = path.parse(absPath);
+        const [absPath] = path.resolve(request.path, request.request).split('?'); // also remove qs from path
 
-        let fileName;
-        if (extensions.includes(ext)) {
-          fileName = `${name}.${suffix}`;
-        } else {
-          fileName = `${request.request}.${suffix}`;
+        const resolveExtension = getResolveExtension(absPath, suffix, extensions);
+
+        if (resolveExtension === false) {
+          return callback();
         }
 
-        for (let index = 0; extensions.length > index; index += 1) {
-          const filePath = path.resolve(
-            request.path,
-            `${fileName}${extensions[index]}`,
-          );
-          const exists = fs.existsSync(filePath);
-
-          if (exists) {
-            const obj = Object.assign({}, request, {
-              request: filePath,
-            });
-
-            const target = resolver.ensureHook('parsedResolve');
-            return resolver.doResolve(
-              target,
-              obj,
-              null,
-              resolveContext,
-              callback,
-            );
-          }
+        const {request: req} = request;
+        let insertPosition = req.length;
+        const qsPos = req.indexOf(resolveExtension);
+        if( qsPos !== -1 ){
+          insertPosition = qsPos;
         }
+        const obj = Object.assign({}, request, {
+          request: req.slice(0, insertPosition) + suffix + req.slice(insertPosition),
+        });
+
+        const target = resolver.ensureHook('parsedResolve');
+        return resolver.doResolve(
+          target,
+          obj,
+          null,
+          resolveContext,
+          callback,
+        );
+
       }
+
       callback();
     });
 };
